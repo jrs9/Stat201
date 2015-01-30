@@ -1,8 +1,10 @@
-#' Graph LinReg and store Data
+#' Graph Linear Regression and store Data
 #' 
 #' @param varx A vector of numbers.
 #' @param vary A vector of numbers.
 #' @return Plot the two vectors on a scatter plot along with the linear regression model, then store and return the int, slope, R, and R^2 values.
+#' @examples
+#' lin(c(1,2,3), c(2,4,6))
 lin <- function(varx, vary){
 fit <- lm(vary ~ varx)
 fit$coefficients[[1]] ->> int
