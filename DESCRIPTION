@@ -1,0 +1,20 @@
+Package: S201
+Type: Package
+Title: Work and functions for my Stat 201 class
+Version: 0.1
+Date: 2015-01-27
+Author: Reed Sawyers
+Maintainer: <jrs9@williams.edu> and <jn2@williams.edu>
+Description: Help me with stat
+License: Free
+LazyData: False
+LazyLoad: no
+VignetteBuilder: knitr
+Depends:
+    dplyr,
+    ws.data,
+    lubridate,
+    ggplot2,
+    tidyr,
+    xtable,
+    roxygen2
