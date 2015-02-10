@@ -1,0 +1,312 @@
+---
+title: "Lecture 1 Stat 201 Spring 2015"
+output: html_document
+
+---
+
+##Everything will be on Glow (2).
+
+Info: 
+Professor: R. De Veaux  
+
+deveaux@williams.edu 
+
+288 Bronfman x3320 
+
+Home phone (up until 10 PM  458 – 9692) 
+
+E-mail – all the time!  
+
+Office Hours: Monday, Wednesday, Thursday  2:30 – 4:00  or by appointment and always by e-mail
+
+TA Sessions -- For now, Sunday 9-10:30 PM  Tuesday and Thursday 8-9:30 PM all Bronfman 119
+
+TAs:
+
+Kelly, Ross, and Lia:
+
+<img src="/Users/rdeveaux/Dropbox/Images/Tas.png" width="600px" height="200px" />
+
+
+
+
+-----------
+
+## Homework -- Electronic submission (!). 
+
+You must turn in your own homework to Glow. Some problems (but not all)  each week are selected (often at random) to be graded.  You may do the homework in consultation with others and you may work together, but you must write up and submit your own work. If computer output is required, you must make the output yourself, not cut and paste from others. Show **all your code** if R commands are used. (**R Markdown** makes this easy to do!)
+
+**R Markdown** will be used to do the homework (which we'll learn about soon).
+
+Grading
+
+There will be two midterms (each has an inclass and a take home component) and a final. Each of the exams counts 1/3, but I will discount half of the lowest of your three exams (once they're adjusted). The exams make up 90% of your grade. 
+
+The homework counts only 10%, but it's crucial to learn the material. Why? Here's  a plot of the average test scores (on the *y* axis) versus the total homework scores on the *x* axis. This kind of plot of two variables is called a **scatterplot**. What can we learn? Is there a relationship here between average test scores and homework?
+
+<img src="/Users/rdeveaux/Dropbox/Images/Fig1.1.jpeg" width="600px" height="600px" />
+
+
+----------
+
+##Interactive Plotting
+
+The most interesting relationships in Statistics involve more than one variable at a time. I've highlighted here the students in the top bin of homework scores. Where are they in terms of test scores? (It might be interesting to compare them to those who scored in the bottom of homework scores).
+
+<img src="/Users/rdeveaux/Dropbox/Images/Fig1.3.png" width="800px" height="500px" />
+
+But before we can really get into these relationships, let's review how we study one variable at a time.
+
+--------------
+
+##A Single Quantitative Variable
+
+We treat variables it two ways, as **quantitative** and as **categorical**. A quantitative variable has measured numerical values and units. By contrast, a categorical variable has values that are names of categories. Most variables are clearly categorical or quantitative, and what we do with them is dictated by that. But some can be treated either way, and our choice will influence how we analyze them. The variable age is a good example. You may measure age in years, or months, or even days. All of these would imply that age is quantitative. But if you group people as *Child*, *Teen*, *Young Adult*, *Adult*, *Middle Age* and *Senior*, then you've got a categorical variable. 
+
+A **histogram** is a reasonable way to display the **distribution** of values of a **quantitative** variable. 
+
+<img src="/Users/rdeveaux/Dropbox/Images/Fig1.2.png" width="400px" height="200px" />
+
+
+When we look at a histogram, we focus on three aspects of the distribution:
+
+* Shape -- is it **symmetric**? or **skewed** to the right or left? How many **modes** do you see? 
+
+* Center -- where is a typical value located?
+
+* Spread (or variation) -- how spread out is the distribution?
+
+Finally -- are there any **unusual features** such as **outliers** or **gaps**?
+
+For the test scores we would say it is roughly symmetric (although cut off at the high end), with a center in the low 80's. 
+
+For center we have some choices:
+
+* Mean -- the sum of the observations divided by the sample size  $\frac{\sum{y_i}}{n}$
+
+    - Sensitive to outliers, but efficiently uses all the data
+    
+
+
+* Median -- the "middle" value. The number for which half the values are below and half are above
+
+    - Insensitive to outliers, but doesn't use all the actual values
+
+
+
+* Trimmed means -- Drop the lowest and highest k% and take the mean of the rest
+
+    - A good compromise, but not widely used.
+
+
+
+For spread we have several choices to describe it:
+
+* Range -- the max - the min. Here that's 43 points
+
+    - Sensitive to the outliers since it's the difference of the extremes
+    
+
+* IQR -- the **interquartile range** : Q3 - Q1. Here that's 13.5 points
+
+    - Like the median. Less sensitive, less "efficient"
+    
+
+* The **standard deviation**: $\frac{\sum{(y_i-\bar{y})^2}}{n-1}$
+
+    - Uses all the data but very sensitive to outliers and skewed data.
+    
+    
+```
+Summary 
+
+For a quantitative variable, use a histogram to display the distribution and describe the shape and any unusual features. For "well behaved" distributions (symmetric, unimodal, no outliers)  use the mean and sd to describe the center and spread For others, use the IQR and median. You can report both, but it's usually a good idea to state why. 
+```
+
+------------
+
+##Quantitative Data -- A Worked Example
+
+Blood pressure is measured in "millimeters of mercury" (mm Hg). There two measurements of arterial pressure are systolic blood pressure and diastolic blood pressure. Systolic blood pressure (SBP), the higher of the two numbers, is defined as the maximum arterial pressure when the heart contracts or beats. Here are the Systolic blood pressure measurements (in mm Hg) of the roughly 7000 people who participated in the 3rd National Health and Nutrition Examination Survey (NHANES III):
+
+
+```{r,fig.width=6, fig.height=3.75,echo=FALSE,include=FALSE}
+library(mosaic)
+```
+
+```{r,fig.width=6, fig.height=3.75}
+NHANES=read.delim("http://sites.williams.edu/rdeveaux/files/2014/09/BP.NHANES.III_.txt")
+nf <- layout(mat = matrix(c(1,2),2,1, byrow=TRUE),  height = c(1.2,3))
+par(oma = c(2, 2, 1, 0), mar = c(2, 2, 1, 0), mgp = c(2, 1, 0), xpd = NA)
+with(NHANES,boxplot(BPXSY1, horizontal=TRUE, width=50, axes=FALSE, outline=TRUE,ylim=c(50,250), frame=F, col = "light green"))
+with(NHANES,hist(BPXSY1,xlim=c(50,250), col = "light green",main="",ylab="Number of people",xlab="Systolic Blood Pressure (mm/mg)"))
+with(NHANES,favstats(BPXSY1))
+```
+
+What can we say about systolic blood pressure from these data? 
+
+The distribution is unimodal, but somewhat skewed to the right (the high end), with a mean of 119.3 mm Hg, slightly higher than the median pressure of 116 mm Hg. The standard deviation is about 19 mm Hg and the IQR is 24 mm Hg. (Here we are reporting both because although the distribution is skewed to the right, most of the values seem to be in the fairly symmetric part. Half of the values are between 106 and 130 mm Hg). The minimum pressure is 72 and the max is 232 giving a range of 160 mm Hg. Value above 162 mm Hg or below 70 would be considered to be outliers. There are no low outliers, but quite a few high ones. 
+
+Of course, the diastolic pressure is also important, but WebMD says "A normal systolic blood pressure is below 120.A systolic blood pressure of 120 to 139 means you have prehypertension, or borderline high blood pressure. Even people with prehypertension are at a higher risk of developing heart disease. A systolic blood pressure number of 140 or higher is considered to be hypertension, or high blood pressure." Let's see what percentage of these people have prehypertension and hypertension:
+
+There are `r with(NHANES,sum(BPXSY1>0,na.rm=T))` values of which `r with(NHANES,sum(BPXSY1>120 & BPXSY1<140,na.rm=T))` have prehypertension or `r format(100*with(NHANES,sum(BPXSY1>120 & BPXSY1<140,na.rm=T))/with(NHANES,sum(BPXSY1>0,na.rm=T)),2)` percent.
+
+And `r with(NHANES,sum(BPXSY1>=140,na.rm=T))` have hypertension or `r format(100*with(NHANES,sum(BPXSY1>=140,na.rm=T))/with(NHANES,sum(BPXSY1>0,na.rm=T)),2)` percent.
+
+So, it seems that the distribution of these values is generally higher than WebMD would like. The CDC, as well, defines high blood pressure as a systolic pressure of 140 mm Hg and above and claims that  1 out of 3 adults has high blood pressure.
+Our percentage is lower, probably because there are children in this sample as well as adults. 
+
+--------------------
+
+#What to do with missing values?
+
+Missing values can make summary statistics quite misleading. Imagine a study of 1000 people listing an average systolic blood pressure of 90. It would certainly be important to know that 997 of those value were missing and the average of 90 actually was the average of only 3 people.
+
+Many statistical packages will report both the summary statsitics and the number of missing. Be sure to look at both. 
+
+In **R**, to avoid this misinterpretation, even one missing value will generate an **NA**. So if
+
+> x=c(1,3,4,NA,5)
+
+then
+
+> mean(x)
+
+returns NA
+
+You have to either override the default:
+
+> mean(x,na.rm=T)
+
+or actually program the missing values out:
+
+> mean(x[!is.na(x)])  
+
+Note that is.na(x) returns T or F depending on whether the value is missing
+!T = F and !F = T, so 
+
+!is.na(x)  is T whenever the value is NOT missing and so
+
+> x[!is.na(x)]  gives back a vector from which all the missing values have been deleted
+
+
+
+-----------
+
+##Categorical Data
+
+For categorical variables, the distribution is simply a frequency distribution of the values. Here's an example:
+
+```{r kable, results="asis"}
+wines=read.delim("http://sites.williams.edu/rdeveaux/files/2014/09/wines.txt")
+wines=wines[,2:1]
+library(knitr)
+kable(wines, "html")
+```
+
+<img src="/Users/rdeveaux/Dropbox/Images/wine-cellar.jpg" width="150px" height="400px" />
+
+```{r}
+barplot(wines$quantity,names=wines$region)
+```
+
+A nicer barplot 
+
+```{r}
+par(las=2) # make label text perpendicular to axis
+par(mar=c(5,8,4,2)) # increase y-axis margin.
+barplot(wines$quantity,names=wines$region,col="light green",horiz=TRUE,xlab="Quantity")
+```
+
+or a pie chart
+
+```{r}
+pie(wines$quantity,labels=wines$region,col=rainbow(8))
+```
+
+Pie Charts are a colorful and sometimes useful way to display the percentages of different categories, but they have problems:
+
+What are the differences among these three distributions?
+
+<img src="/Users/rdeveaux/Dropbox/Images/Piecharts1.png" width="800px" height="500px" />
+
+
+-----------
+
+##Barcharts vs. Piecharts
+
+
+Here are the corresponding barcharts:
+
+<img src="/Users/rdeveaux/Dropbox/Images/Barcharts for Piecharts.png" width="800px" height="500px" />
+
+----------------------
+
+Where are we going?
+
+Here are the prices of about 1000 houses in the Saratoga NY region with and without fireplaces.
+
+```{r}
+real=read.delim("http://sites.williams.edu/rdeveaux/files/2014/09/Saratoga.txt")  # read in data from the web 
+real$Fireplace=factor(real$Fireplaces==0,labels=c("Yes","No"))
+```
+
+```{r fig.width=3, fig.height=4}
+with(real,boxplot(Price~Fireplace,col=c("light pink","blue")))
+```
+
+```{r}
+mean(Price~Fireplace,data=real)
+```
+
+What's the difference is price? About $`r format(mean(real$Price[real$Fireplace=="Yes"])-mean(real$Price[real$Fireplace=="No"]),2)`.
+
+Is this how much a fireplace is "worth"?
+
+What's the relationship with size of the house?
+```{r fig.width=8, fig.height=6.1}
+with(real,plot(Price~Living.Area,pch=20,col="#0000FF",xlab="Living Area",ylab="Price"))
+options(scipen=1, digits=2)
+mod0=lm(Price~Living.Area,data=real)
+mod0
+abline(mod0)
+```
+
+Are fireplaces evenly distributed with respect to size of the house? 
+```{r fig.width=8, fig.height=6.1}
+colors=rep("pink",length(real$Fireplace))
+colors[real$Fireplace=="No"]="#0000FF"
+colors[real$Fireplace=="Yes"]="#FF0000"
+with(real,plot(Price~Living.Area,pch=20,col=colors,xlab="Living Area",ylab="Price"))
+abline(mod0)
+```
+
+```{r fig.width=8, fig.height=6.1}
+mod1=lm(Price~Living.Area+(Fireplace=="Yes"),data=real)
+mod2=lm(Price~Living.Area+Fireplace+Living.Area*Fireplace,data=real)
+colors=rep("pink",length(real$Fireplace))
+colors[real$Fireplace=="No"]="#0000FF"
+colors[real$Fireplace=="Yes"]="#FF0000"
+with(real,plot(Price~Living.Area,pch=20,col=colors,xlab="Living Area",ylab="Price"))
+abline(mod1,col="blue")
+abline(c(19167+5567,111),col="red")
+```
+
+What if we fit two lines? 
+
+```{r fig.width=8, fig.height=6.1}
+colors=rep("pink",length(real$Fireplace))
+colors[real$Fireplace=="No"]="#0000FF"
+colors[real$Fireplace=="Yes"]="#FF0000"
+with(real,plot(Price~Living.Area,pch=20,col=colors,xlab="Living Area",ylab="Price"))
+coefs=coefficients(mod2)
+abline(c(coefs[1],coefs[2]),col="red")
+abline(c(coefs[1]+coefs[3],coefs[2]+coefs[4]),col="blue")
+```
+
+What if we let the lines go? 
+
+How much do you think a fireplace is worth now? 
+
+
+
